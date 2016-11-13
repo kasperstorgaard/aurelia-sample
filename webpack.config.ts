@@ -1,12 +1,9 @@
 /// <reference path="./node_modules/@types/node/index.d.ts" />
-import { generateConfig, get, stripMetadata, EasyWebpackConfig } from '@easy-webpack/core';
 import * as path from 'path';
 import * as AureliaWebpackPlugin from 'aurelia-webpack-plugin';
-import * as aurelia from '@easy-webpack/config-aurelia';
-import * as typescript from '@easy-webpack/config-typescript';
-import * as html from '@easy-webpack/config-html';
-import * as generateIndexHtml from '@easy-webpack/config-generate-index-html';
-import * as commonChunksOptimize from '@easy-webpack/config-common-chunks-simple';
+import { ForkCheckerPlugin, TsConfigPathsPlugin } from 'awesome-typescript-loader';
+import * as HtmlWebpackPlugin from 'html-webpack-plugin';
+import * as webpack from 'webpack';
 
 const title = 'Aurelia sample';
 const baseUrl = '/';
@@ -14,49 +11,44 @@ const rootDir = path.resolve();
 const srcDir = path.resolve('src');
 const outDir = path.resolve('dist');
 
-const coreBundles = {
-  bootstrap: [
-    'aurelia-bootstrapper-webpack',
-    'aurelia-polyfills',
-    'aurelia-pal',
-    'aurelia-pal-browser'
-  ],
-  // these will be included in the 'aurelia' bundle (except for the above bootstrap packages)
-  aurelia: [
-    'aurelia-binding',
-    'aurelia-dependency-injection',
-    'aurelia-event-aggregator',
-    'aurelia-framework',
-    'aurelia-history',
-    'aurelia-history-browser',
-    'aurelia-loader',
-    'aurelia-loader-webpack',
-    'aurelia-logging',
-    'aurelia-logging-console',
-    'aurelia-metadata',
-    'aurelia-path',
-    'aurelia-route-recognizer',
-    'aurelia-router',
-    'aurelia-task-queue',
-    'aurelia-templating',
-    'aurelia-templating-binding',
-    'aurelia-templating-router',
-    'aurelia-templating-resources'
-  ]
-}
+const shouldMinify = false;
+const metadata = { root: rootDir, src: srcDir, title, baseUrl };
+
+const bootstrapBundles = [
+  'aurelia-bootstrapper-webpack',
+  'aurelia-polyfills',
+  'aurelia-pal',
+  'aurelia-pal-browser'
+];
+
+const aureliaBundles = [
+  'aurelia-binding',
+  'aurelia-dependency-injection',
+  'aurelia-event-aggregator',
+  'aurelia-framework',
+  'aurelia-history',
+  'aurelia-history-browser',
+  'aurelia-loader',
+  'aurelia-loader-webpack',
+  'aurelia-logging',
+  'aurelia-logging-console',
+  'aurelia-metadata',
+  'aurelia-path',
+  'aurelia-route-recognizer',
+  'aurelia-router',
+  'aurelia-task-queue',
+  'aurelia-templating',
+  'aurelia-templating-binding',
+  'aurelia-templating-router',
+  'aurelia-templating-resources'
+];
 
 const mainConfig = {
   devtool: 'inline-source-map',
   entry: {
     app: ['./src/main'],
-    'aurelia-bootstrap': coreBundles.bootstrap,
-    aurelia: coreBundles.aurelia
-  },
-  metadata: {
-    root: rootDir,
-    src: srcDir,
-    title,
-    baseUrl
+    'aurelia-bootstrap': bootstrapBundles,
+    aurelia: aureliaBundles
   },
   output: {
     path: outDir,
@@ -64,6 +56,39 @@ const mainConfig = {
     sourceMapFilename: '[name].bundle.map',
     chunkFilename: '[id].chunk.js'
   },
+  resolve: {
+    extensions: ['.js', '.ts'],
+    modules: [srcDir, 'node_modules']
+  },
+  module:{
+    rules: [{
+      test: /\.ts$/,
+      loader: 'awesome-typescript-loader',
+      exclude: path.join(rootDir, 'node_modules'),
+      query: {}
+    }, {
+        test: /\.html$/,
+        loader: 'html-loader',
+        exclude: path.join(rootDir, 'index.html')
+    }]
+  },
+  plugins: [
+    new AureliaWebpackPlugin(metadata),
+    new ForkCheckerPlugin(),
+    new TsConfigPathsPlugin({}),
+    new HtmlWebpackPlugin({
+      template: 'index.html',
+      chunksSortMode: 'dependency',
+      minify: !shouldMinify ? undefined : {
+        removeComments: true,
+        collapseWhitespace: true
+      },
+      metadata
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: ['aurelia', 'aurelia-bootstrap']
+    })
+  ],
   devServer: {
     port: 9000,
     historyApiFallback: true,
@@ -72,36 +97,7 @@ const mainConfig = {
       poll: 1000
     },
     outputPath: outDir
-  },
-  plugins: [
-    new AureliaWebpackPlugin({
-      root: rootDir,
-      src: srcDir,
-      title,
-      baseUrl
-    })
-  ],
-  resolve: {
-    modules: [srcDir].concat(get(this, 'resolve.modules', ['node_modules']))
   }
 };
 
-const typescriptConfig = typescript({});
-
-const chunkConfig = commonChunksOptimize({
-  appChunkName: 'app',
-  firstChunk: 'aurelia-bootstrap'
-});
-
-const htmlConfig = html();
-const indexConfig = generateIndexHtml()
-
-const config = generateConfig(
-  mainConfig,
-  typescriptConfig,
-  htmlConfig,
-  indexConfig,
-  chunkConfig
-);
-
-module.exports = stripMetadata(config);
+module.exports = mainConfig;
