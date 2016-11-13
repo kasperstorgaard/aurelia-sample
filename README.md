@@ -10,7 +10,10 @@ served through webpack-dev-server
 
 ```npm start```
 
-## Test (WIP)
+## Test
+install `ts-node` globally, we need this for the test runtime environment
+```npm install -g ts-node```
+
 testing through [tape](https://github.com/substack/tape) and [testdouble](https://github.com/testdouble/testdouble.js)
 
 ```npm test```
