@@ -13,5 +13,5 @@ testing through [tape](https://github.com/substack/tape) and [testdouble](https:
 ```npm test```
 
 
-## Aknowledgements
+## Acknowledgements
 Largely based on [skeleton navigation](https://github.com/aurelia/skeleton-navigation/blob/master/skeleton-typescript-webpack)
