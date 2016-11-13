@@ -1,3 +1,6 @@
 import 'aurelia-polyfills';
 import {initialize} from 'aurelia-pal-browser';
-initialize();
+
+export function setupEnv () {
+    initialize();
+}
