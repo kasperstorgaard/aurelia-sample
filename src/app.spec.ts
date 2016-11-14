@@ -1,6 +1,7 @@
 #!/usr/bin/env ts-node
-const { test } = require('tape');
-const td = require('testdouble');
+// ../custom_typings/testdouble.d.ts" />
+import * as test from 'tape';
+import * as td from 'testdouble';
 
 import { App } from './app';
 
