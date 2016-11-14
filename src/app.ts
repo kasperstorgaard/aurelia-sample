@@ -1,15 +1,23 @@
-import {Aurelia} from 'aurelia-framework';
+import 'aurelia-framework';
 import {Router, RouterConfiguration} from 'aurelia-router';
 
 export class App {
-  router: Router;
+  public router: Router;
 
-  configureRouter(config: RouterConfiguration, router: Router) {
+  public configureRouter(config, router) {
+    this.router = router;
+
     config.title = 'Aurelia';
     config.map([
-      { route: ['', 'splash'], name: 'splash', moduleId: './splash', nav: true, title: 'Splash' }
+      {
+        moduleId: './splash',
+        name: 'splash',
+        nav: true,
+        route: ['', 'splash'],
+        title: 'Splash'
+      }
     ]);
-
-    this.router = router;
   }
 }
+
+export default App;
