@@ -6,9 +6,9 @@
   "scripts": {
     "clean": "del-cli dist",
     "start": "npm run server",
-    "server": "cross-env NODE_ENV=development npm run webpack-dev-server -- --inline --progress --profile --watch",
+    "server": "npm run webpack-dev-server -- --inline --progress --profile --watch",
     "test": "ts-node ./node_modules/.bin/tape ./src/**/*.spec.ts | faucet",
-    "webpack-dev-server": "cross-env TS_NODE_PROJECT=tsconfig.tsnode.json TS_NODE_FAST=true ./node_modules/.bin/webpack-dev-server"
+    "webpack-dev-server": "cross-env TS_NODE_FAST=true ./node_modules/.bin/webpack-dev-server"
   },
   "repository": {
     "type": "git",
@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@types/node": "^6.0.46",
+    "@types/tape": "^4.2.28",
     "@types/webpack": "^1.12.35",
     "@types/whatwg-fetch": "^0.0.32",
     "concurrently": "^3.1.0",
