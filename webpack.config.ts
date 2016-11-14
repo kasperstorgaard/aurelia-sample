@@ -64,8 +64,7 @@ const mainConfig = {
     rules: [{
       test: /\.ts$/,
       loader: 'awesome-typescript-loader',
-      exclude: path.join(rootDir, 'node_modules'),
-      query: {}
+      exclude: path.join(rootDir, 'node_modules')
     }, {
         test: /\.html$/,
         loader: 'html-loader',
