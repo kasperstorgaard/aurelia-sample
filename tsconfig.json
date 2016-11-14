@@ -1,13 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "es2015",
+    "module": "commonjs",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "strictNullChecks": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "allowJs": true,
     "lib": [
       "es2017", "dom"
     ]
