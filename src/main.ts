@@ -1,4 +1,7 @@
-﻿import {Aurelia} from 'aurelia-framework';
+﻿import '../lib/skeleton/normalize.css';
+import '../lib/skeleton/skeleton.css';
+
+import {Aurelia} from 'aurelia-framework';
 
 export async function configure(aurelia: Aurelia) {
   aurelia.use

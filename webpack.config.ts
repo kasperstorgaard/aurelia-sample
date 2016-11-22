@@ -1,4 +1,3 @@
-/// <reference path="./node_modules/@types/node/index.d.ts" />
 import * as path from 'path';
 import * as AureliaWebpackPlugin from 'aurelia-webpack-plugin';
 import { ForkCheckerPlugin, TsConfigPathsPlugin } from 'awesome-typescript-loader';
@@ -44,58 +43,60 @@ const aureliaBundles = [
 ];
 
 const mainConfig = {
+  devServer: {
+    historyApiFallback: true,
+    outputPath: outDir,
+    port: 9000,
+    watchOptions: {
+      aggregateTimeout: 300,
+      poll: 1000
+    }
+  },
   devtool: 'inline-source-map',
   entry: {
     app: ['./src/main'],
     'aurelia-bootstrap': bootstrapBundles,
     aurelia: aureliaBundles
   },
-  output: {
-    path: outDir,
-    filename: '[name].bundle.js',
-    sourceMapFilename: '[name].bundle.map',
-    chunkFilename: '[id].chunk.js'
-  },
-  resolve: {
-    extensions: ['.js', '.ts'],
-    modules: [srcDir, 'node_modules']
-  },
-  module:{
+  module: {
     rules: [{
-      test: /\.ts$/,
       loader: 'awesome-typescript-loader',
-      exclude: path.join(rootDir, 'node_modules')
+      test: /\.ts$/
     }, {
-        test: /\.html$/,
-        loader: 'html-loader',
-        exclude: path.join(rootDir, 'index.html')
+      exclude: path.join(rootDir, 'index.html'),
+      loader: 'html-loader',
+      test: /\.html$/
+    }, {
+      loader: 'style-loader!css-loader',
+      test: /\.css$/
     }]
+  },
+  output: {
+    chunkFilename: '[id].chunk.js',
+    filename: '[name].bundle.js',
+    path: outDir,
+    sourceMapFilename: '[name].bundle.map'
   },
   plugins: [
     new AureliaWebpackPlugin(metadata),
     new ForkCheckerPlugin(),
     new TsConfigPathsPlugin({}),
     new HtmlWebpackPlugin({
-      template: 'index.html',
       chunksSortMode: 'dependency',
+      metadata,
       minify: !shouldMinify ? undefined : {
-        removeComments: true,
-        collapseWhitespace: true
+        collapseWhitespace: true,
+        removeComments: true
       },
-      metadata
+      template: 'index.html'
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: ['aurelia', 'aurelia-bootstrap']
     })
   ],
-  devServer: {
-    port: 9000,
-    historyApiFallback: true,
-    watchOptions: {
-      aggregateTimeout: 300,
-      poll: 1000
-    },
-    outputPath: outDir
+  resolve: {
+    extensions: ['.js', '.ts'],
+    modules: ['node_modules']
   }
 };
 

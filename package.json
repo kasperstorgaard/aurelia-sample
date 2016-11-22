@@ -7,7 +7,7 @@
     "clean": "del-cli dist",
     "start": "npm run server",
     "server": "npm run webpack-dev-server -- --inline --progress --profile --watch",
-    "test": "ts-node ./node_modules/.bin/tape ./src/**/*.spec.ts | faucet",
+    "test": "ts-node ./node_modules/.bin/tape ./src/**/*.spec.ts | tap-spec",
     "webpack-dev-server": "cross-env TS_NODE_FAST=true ./node_modules/.bin/webpack-dev-server"
   },
   "repository": {
@@ -54,10 +54,12 @@
     "@types/whatwg-fetch": "^0.0.32",
     "concurrently": "^3.1.0",
     "cross-env": "^3.1.3",
+    "css-loader": "^0.26.0",
     "del-cli": "^0.2.0",
-    "faucet": "0.0.1",
     "html-webpack-plugin": "^2.24.1",
     "http-server": "^0.9.0",
+    "tap-dot": "^1.0.5",
+    "tap-spec": "^4.1.1",
     "tape": "^4.6.2",
     "testdouble": "^1.9.0",
     "ts-node": "^1.7.0",

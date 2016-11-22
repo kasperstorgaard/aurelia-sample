@@ -1,4 +1,6 @@
 import 'aurelia-framework';
+import '../lib/skeleton/normalize.css';
+import '../lib/skeleton/skeleton.css';
 import {Router, RouterConfiguration} from 'aurelia-router';
 
 export class App {

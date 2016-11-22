@@ -1,9 +1,7 @@
-#!/usr/bin/env ts-node
-// ../custom_typings/testdouble.d.ts" />
 import * as test from 'tape';
 import * as td from 'testdouble';
 
-import { App } from './app';
+import { App } from '../src/app';
 
 function setup () {
   const config = td.object(['map', 'configure']);
@@ -16,14 +14,11 @@ function setup () {
   };
 }
 
-// function tearDown () {}
-
 test('app.configureRouter(): router', (t) => {
   const { sut, router, config } = setup();
 
   sut.configureRouter(config, router);
-  t.ok(sut.router,
-    '.configureRouter() should set the "router" property');
+  t.ok(sut.router, 'should set the "router" property');
 
   t.end();
 });
@@ -41,9 +36,12 @@ test('app.configureRouter(): title', (t) => {
 
   sut.configureRouter(config, router);
 
-  t.doesNotThrow(() => {
+  try {
     td.verify(config.map([routeConfig]));
-  }, '.configureRouter(), should set the .title property to "Aurelia"');
+    t.pass('should be called with [routeConfig]');
+  } catch (e) {
+    t.fail(e.message);
+  }
 
   t.end();
 });
